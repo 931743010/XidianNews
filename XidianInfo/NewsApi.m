@@ -12,7 +12,7 @@
 @implementation NewsApi
 
 - (NSString *)getUrlPathWithFilter:(NSInteger)filter atPage:(NSInteger)pageIndex {
-    NSString *urlPath = [APIBaseURL stringByAppendingString:@"newslist.php?newsType=%@&pageIndex=%ld&pageSize=20"];
+    NSString *urlPath = [APIBaseURL stringByAppendingString:@"newslist.php?newsType=%@&pageIndex=%ld&pageSize=10"];
     
 //    @"newslist.php?newsType=%@&pageIndex=%ld&pageSize=20";
     return [NSString stringWithFormat:urlPath,filter,(long)pageIndex];

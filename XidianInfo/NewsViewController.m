@@ -17,6 +17,7 @@
 @interface NewsViewController ()<UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate>
 
 @property (nonatomic, strong) NSArray *newsTypeList;
+@property (nonatomic, strong) NSMutableArray *currentIndexPageArray;
 @property (nonatomic, strong) NSArray *arraylist;
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, assign) NSInteger currentIndex;
@@ -35,7 +36,12 @@
     self.view.backgroundColor = [UIColor whiteColor];
     self.navigationController.navigationBar.translucent = NO;
     self.newsTypeList = @[@1010,@1012,@1013,@1014,@1015,@1016,@1017,@1018,@1019];
+    
     self.arraylist = @[@"西电新闻", @"本科教学", @"研究生教学", @"科研信息", @"合作交流", @"学生工作", @"人事动态", @"本科招生", @"学生就业"];
+    for (int i=0; i<9; i++) {
+        [self.currentIndexPageArray addObject:@0];
+    }
+    
     self.currentIndex = 0;
     [self addLabels];
     self.newsListArray = [[NSMutableArray alloc] init];
@@ -87,6 +93,9 @@
         vc.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
             [self refreshTableViewAt:index];
         }];
+        vc.tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
+            [self tableViewLoadMoreAt:index];
+        }];
         [self.scrollView addSubview:vc.tableView];
         
         //    UIView *firstView = [self.childViewControllers firstObject].view;
@@ -119,9 +128,33 @@
             [weakself.newsListArray removeAllObjects];
             weakself.newsListArray = [[NSMutableArray alloc] initWithArray:dataArray];
             [vc.tableView reloadData];
+            weakself.currentIndexPageArray[index] = @0;
             [vc.tableView.mj_header endRefreshing];
         }
     } newsType:newsType atPage:0];
+}
+
+- (void)tableViewLoadMoreAt:(NSInteger)index {
+    NSNumber *currentPage = [self.currentIndexPageArray objectAtIndex:index];
+    NSInteger nextPage = [currentPage integerValue];
+    
+    UITableViewController *vc = self.childViewControllers[index];
+    [vc.tableView.mj_footer beginRefreshing];
+    NSInteger newsType = (NSInteger)self.newsTypeList[index];
+    
+    __weak typeof(self)weakself = self;
+    [[NewsApi alloc] getNewsList:^(id data, NSError *error) {
+        if (data) {
+            NSArray *dataArray = data;
+//            [weakself.newsListArray removeAllObjects];
+            [weakself.newsListArray addObjectsFromArray:dataArray];
+            [vc.tableView reloadData];
+            
+            weakself.currentIndexPageArray[index] = [NSNumber numberWithInteger:nextPage];
+            [vc.tableView.mj_footer endRefreshing];
+        }
+    } newsType:newsType atPage:nextPage];
+    
 }
 
 
@@ -274,6 +307,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NewsContentViewController *newsContentViewController = [[NewsContentViewController alloc] init];
+    newsContentViewController.hidesBottomBarWhenPushed = YES;
     newsContentViewController.newsEntityModel = [self.newsListArray objectAtIndex:indexPath.row];
     [self.navigationController pushViewController:newsContentViewController animated:YES];
     
@@ -288,10 +322,10 @@
 {
     //    NSLog(@" scrollViewDidScroll");
     NSLog(@"ContentOffset  x is  %f,yis %f",scrollView.contentOffset.x,scrollView.contentOffset.y);
-    if (self.scrollView.contentOffset.x>0 && self.scrollView.contentOffset.x<kScreenWidth*8) {
-        CGPoint bannerScrollViewOffset = CGPointMake(((self.scrollView.contentOffset.x)/(kScreenWidth*8))*(85 * 9-kScreenWidth), 0);
-        [self.bannerScrollView setContentOffset:bannerScrollViewOffset animated:NO];
-    }
+//    if (self.scrollView.contentOffset.x>0 && self.scrollView.contentOffset.x<kScreenWidth*8) {
+//        CGPoint bannerScrollViewOffset = CGPointMake(((self.scrollView.contentOffset.x)/(kScreenWidth*8))*(85 * 9-kScreenWidth), 0);
+//        [self.bannerScrollView setContentOffset:bannerScrollViewOffset animated:YES];
+//    }
 }
 //开始拖拽视图
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView;
@@ -324,6 +358,8 @@
     
     [self changeLabelColorAt:Index];
     
+    [self.bannerScrollView setContentOffset:CGPointMake(((85*9-kScreenWidth)/8)*Index, 0) animated:YES];
+    
     UITableViewController *vc = self.childViewControllers[Index];
     if ([vc.tableView isDescendantOfView:self.scrollView]) {
         return;
@@ -347,6 +383,8 @@
     self.currentIndex = Index;
     
     [self changeLabelColorAt:Index];
+    
+    [self.bannerScrollView setContentOffset:CGPointMake(((85*9-kScreenWidth)/9)*Index, 0) animated:YES];
     
     UITableViewController *vc = self.childViewControllers[Index];
     if ([vc.tableView isDescendantOfView:self.scrollView]) {
