@@ -7,8 +7,18 @@
 //
 
 #import "AppDelegate.h"
+#import <SVProgressHUD.h>
+
+#import "NewsViewController.h"
+#import "ReadingViewController.h"
+#import "MediaViewController.h"
+#import "TopicViewController.h"
+#import "UserViewController.h"
 
 @interface AppDelegate ()
+
+@property (nonatomic, strong) UITabBarController *tabBarController;
+
 
 @end
 
@@ -17,7 +27,46 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    [self setupTabBarController];
+    [self customizeAppearance];
+    self.window.rootViewController = self.tabBarController;
+    [self.window makeKeyAndVisible];
     return YES;
+}
+
+- (void)customizeAppearance {
+    
+    
+    [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
+    [SVProgressHUD setForegroundColor:[UIColor whiteColor]];
+    [SVProgressHUD setBackgroundColor:[UIColor blackColor]];
+    
+    [UITabBar appearance].tintColor = HEXCOLOR(0xdf3031);
+    [UITabBar appearance].barTintColor = HEXCOLOR(0xf5f5f5);
+    
+    [UINavigationBar appearance].tintColor = [UIColor whiteColor];
+    [UINavigationBar appearance].barTintColor = HEXCOLOR(0xdf3031);
+    [UINavigationBar appearance].titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
+    
+}
+
+- (void)setupTabBarController {
+    NSArray<UIViewController *> *viewControllers = @[[NewsViewController new], [ReadingViewController new], [MediaViewController new], [TopicViewController new],[UserViewController new]];
+    NSArray<NSString *> *tabImages = @[@"icon_tabbar_news", @"icon_tabbar_reading", @"icon_tabbar_media", @"icon_tabbar_topic",@"icon_tabbar_user"];
+    NSArray<NSString *> *titles = @[@"新闻", @"阅读", @"视听", @"话题", @"我"];
+    
+    NSArray<UINavigationController *> *navViewControllers = [viewControllers map:^UIViewController *(UIViewController *vc, NSUInteger idx) {
+        vc.tabBarItem.image = [[UIImage imageNamed:tabImages[idx]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        vc.tabBarItem.selectedImage = [[UIImage imageNamed:[tabImages[idx] stringByAppendingString:@"_on"]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        vc.title = titles[idx];
+        return [[UINavigationController alloc] initWithRootViewController:vc];
+    }];
+    
+    self.tabBarController = [[UITabBarController alloc] init];
+    self.tabBarController.tabBar.translucent = NO;
+    self.tabBarController.viewControllers = navViewControllers;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

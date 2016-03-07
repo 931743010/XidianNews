@@ -10,6 +10,6 @@ pod 'YYModel'
 pod 'SVProgressHUD'
 pod 'MJRefresh'
 pod 'ReactiveCocoa'
-
+pod 'Realm'
 
 end
