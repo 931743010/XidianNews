@@ -9,10 +9,8 @@
 #import "NewsEntityCell.h"
 #import <Masonry.h>
 
-#define kTitleFont [UIFont systemFontOfSize:17.0]
-#define kTimeFont [UIFont systemFontOfSize:12.0]
-#define kFromFont [UIFont systemFontOfSize:12.0]
 @implementation NewsEntityCell
+
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];

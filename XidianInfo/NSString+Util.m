@@ -16,9 +16,14 @@
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7) {
         NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
         paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
-        NSDictionary *attributes = @{NSFontAttributeName:font, NSParagraphStyleAttributeName:paragraphStyle.copy};
+        NSDictionary *attributes = @{NSFontAttributeName:font, NSParagraphStyleAttributeName:paragraphStyle};
+//        NSDictionary *attributes = @{ NSFontAttributeName : font, NSParagraphStyleAttributeName : paragraphStyle };
+//        NSDictionary *dic = font.fontDescriptor.fontAttributes;
         
-        expectedLabelSize = [self boundingRectWithSize:size options:NSStringDrawingUsesLineFragmentOrigin attributes:attributes context:nil].size;
+        expectedLabelSize = [self boundingRectWithSize:size
+                                               options:NSStringDrawingUsesLineFragmentOrigin
+                                            attributes:attributes
+                                               context:nil].size;
     }
     else {
         expectedLabelSize = [self sizeWithFont:font

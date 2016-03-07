@@ -18,4 +18,9 @@
 #define RGB(r,g,b) RGBA(r,g,b,1.0f)
 #define HEXCOLOR(color) RGB(((color & 0xff0000) >> 16),((color & 0xff00) >> 8),(color & 0x0000ff))
 
+//font
+#define kTitleFont [UIFont systemFontOfSize:17.0]
+#define kTimeFont [UIFont systemFontOfSize:12.0]
+#define kFromFont [UIFont systemFontOfSize:12.0]
+
 #endif /* UIConstants_h */
