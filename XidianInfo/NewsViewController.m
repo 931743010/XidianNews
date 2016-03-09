@@ -30,6 +30,9 @@
 
 @implementation NewsViewController
 
+
+#pragma mark - UIViewController life cycle
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -53,10 +56,8 @@
     
 }
 
-
 - (void)loadView {
     [super loadView];
-//    [self addController];
     [self configureViews];
 }
 
@@ -66,17 +67,18 @@
 }
 
 
+#pragma mark - configure childController
 
-/** 添加子控制器 */
-- (void)addController
-{
+/**
+ *  添加子控制器
+ */
+- (void)addController {
     for (int i=0 ; i<9 ;i++){
         UITableViewController *vc = [[UITableViewController alloc] initWithStyle:UITableViewStylePlain];
         [self addChildViewController:vc];
     }
 
 }
-
 
 - (void)configureViewControllerAt:(NSInteger)index {
     UITableViewController *vc = self.childViewControllers[index];
@@ -109,12 +111,15 @@
     }
 }
 
-
+/**
+ *  配置第index个的子控制器
+ *
+ *  @param index index
+ */
 - (void)configureTableDataSourceAt:(NSInteger)index {
     UITableViewController *vc = self.childViewControllers[index];
     [vc.tableView.mj_header beginRefreshing];
 }
-
 
 - (void)refreshTableViewAt:(NSInteger)index {
     UITableViewController *vc = self.childViewControllers[index];
@@ -157,10 +162,10 @@
     
 }
 
-
-/** 添加标题栏 */
-- (void)addLabels
-{
+/**
+ *  添加标题栏
+ */
+- (void)addLabels {
     for (int i = 0; i < 9; i++) {
         CGFloat labelW = kBannerLabelWidth;
         CGFloat labelH = kBannerLabelHeight;
@@ -183,20 +188,15 @@
         
         [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(labelClick:)]];
     }
-//    for (int i=0; i<9; i++) {
-//        UILabel *label = [[UILabel alloc] init];
-//        [self.bannerScrollView addSubview:label];
-//        [label mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.top.equalTo(self.bannerScrollView.mas_top).with.offset(0);
-//            make.bottom.equalTo(self.bannerScrollView.mas_bottom).with.offset(0);
-//            make.left
-//        }]
-//    }
+
     self.bannerScrollView.contentSize = CGSizeMake(kBannerLabelWidth * 9, 0);
-    
 }
 
-
+/**
+ *  标题栏点击事件
+ *
+ *  @param sender sender
+ */
 - (void)labelClick:(id)sender {
     
     UITapGestureRecognizer *tap = sender;
@@ -209,7 +209,11 @@
 //    [self.scrollView setContentOffset:CGPointMake(0, 0)];
 }
 
-
+/**
+ *  改变当前标题栏的颜色为红色
+ *
+ *  @param index index
+ */
 - (void)changeLabelColorAt:(NSInteger)index {
     NSArray *labelsArray = [self.bannerScrollView subviews];
     [labelsArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -222,7 +226,6 @@
     }];
     
 }
-
 
 - (void)configureViews {
     self.bannerScrollView = [[UIScrollView alloc] init];
@@ -241,20 +244,7 @@
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.backgroundColor = HEXCOLOR(0xf6f6f6);
     [self.view addSubview:self.scrollView];
-    
-//    self.tableView                 = [[UITableView alloc] init];
-//    self.tableView.separatorStyle  = UITableViewCellSeparatorStyleSingleLine;
-//    self.tableView.delegate        = self;
-//    self.tableView.dataSource      = self;
-//    [self.scrollView addSubview:self.tableView];
-
-    
-//    self.prototypeCell = (NewsEntityCell *)[vc1.tableView dequeueReusableCellWithIdentifier:@"NewsEntityCell"];
-//    if (!self.prototypeCell) {
-//        self.prototypeCell = [[NewsEntityCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"NewsEntityCell"];
-//    }
 }
-
 
 - (void)configureSubviewsFrame {
     [self.bannerScrollView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -263,8 +253,6 @@
         make.right.equalTo(self.view.mas_right).with.offset(0);
         make.height.equalTo(@(kBannerHeight));
     }];
-    
-
     
     [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.bannerScrollView.mas_bottom).with.offset(0);
@@ -276,10 +264,10 @@
 }
 
 
+#pragma mark - UITableView
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.newsListArray.count;
 }
-
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NewsEntityCell *cell = (NewsEntityCell *)[tableView dequeueReusableCellWithIdentifier:@"NewsEntityCell"];
@@ -293,7 +281,6 @@
     return cell;
 }
 
-
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     NewsEntityCell *cell = (NewsEntityCell *)self.prototypeCell;
     NewsEntityModel *newsEntityModel = [self.newsListArray objectAtIndex:indexPath.row];
@@ -303,7 +290,6 @@
                                                          font:kTimeFont];
     return titleSize.height + timeSize.height + kNewEntityCellPadding*3;
 }
-
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NewsContentViewController *newsContentViewController = [[NewsContentViewController alloc] init];
@@ -315,37 +301,31 @@
 }
 
 
-#pragma mark -- UIScrollView
+#pragma mark - UIScrollView
 
 //只要滚动了就会触发
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView;
-{
-    //    NSLog(@" scrollViewDidScroll");
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     NSLog(@"ContentOffset  x is  %f,yis %f",scrollView.contentOffset.x,scrollView.contentOffset.y);
-//    if (self.scrollView.contentOffset.x>0 && self.scrollView.contentOffset.x<kScreenWidth*8) {
-//        CGPoint bannerScrollViewOffset = CGPointMake(((self.scrollView.contentOffset.x)/(kScreenWidth*8))*(85 * 9-kScreenWidth), 0);
-//        [self.bannerScrollView setContentOffset:bannerScrollViewOffset animated:YES];
-//    }
+
 }
+
 //开始拖拽视图
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView;
-{
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     NSLog(@"scrollViewWillBeginDragging");
 }
+
 //完成拖拽
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate;
-{
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
     NSLog(@"scrollViewDidEndDragging");
 }
+
 //将开始降速时
-- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView;
-{
+- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
     NSLog(@"scrollViewWillBeginDecelerating");
 }
 
 //减速停止了时执行，手触摸时执行执行
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView;
-{
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     NSLog(@"scrollViewDidEndDecelerating");
 //    [self.newsListArray removeAllObjects];
     NSInteger Index = self.scrollView.contentOffset.x/kScreenWidth;
@@ -369,9 +349,9 @@
     [self configureTableDataSourceAt:Index];
     
 }
+
 //滚动动画停止时执行,代码改变时出发,也就是setContentOffset改变时
-- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView;
-{
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
     NSLog(@"scrollViewDidEndScrollingAnimation");
     //    [self.newsListArray removeAllObjects];
     NSInteger Index = self.scrollView.contentOffset.x/kScreenWidth;
