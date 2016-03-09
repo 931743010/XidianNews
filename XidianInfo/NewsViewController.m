@@ -162,8 +162,8 @@
 - (void)addLabels
 {
     for (int i = 0; i < 9; i++) {
-        CGFloat labelW = 85;
-        CGFloat labelH = 32;
+        CGFloat labelW = kBannerLabelWidth;
+        CGFloat labelH = kBannerLabelHeight;
         CGFloat labelY = 0;
         CGFloat labelX = i * labelW;
         UILabel *label = [[UILabel alloc] init];
@@ -171,7 +171,7 @@
         label.text =self.arraylist[i];
         label.textAlignment = NSTextAlignmentCenter;
         label.frame = CGRectMake(labelX, labelY, labelW, labelH);
-        label.font = [UIFont systemFontOfSize:16];
+        label.font = kBannerLabelFont;
         if (i == 0) {
             label.textColor = HEXCOLOR(0xdf3031);
         } else {
@@ -192,7 +192,7 @@
 //            make.left
 //        }]
 //    }
-    self.bannerScrollView.contentSize = CGSizeMake(85 * 9, 0);
+    self.bannerScrollView.contentSize = CGSizeMake(kBannerLabelWidth * 9, 0);
     
 }
 
@@ -227,7 +227,7 @@
 - (void)configureViews {
     self.bannerScrollView = [[UIScrollView alloc] init];
     self.bannerScrollView.delegate = self;
-    self.bannerScrollView.contentSize = CGSizeMake(kScreenWidth*2, 36);
+    self.bannerScrollView.contentSize = CGSizeMake(kScreenWidth*2, kBannerLabelHeight);
 //    self.bannerScrollView.pagingEnabled = YES;
     self.bannerScrollView.showsHorizontalScrollIndicator = NO;
     self.bannerScrollView.showsVerticalScrollIndicator = NO;
@@ -261,7 +261,7 @@
         make.top.equalTo(self.view.mas_top).with.offset(0);
         make.left.equalTo(self.view.mas_left).with.offset(0);
         make.right.equalTo(self.view.mas_right).with.offset(0);
-        make.height.equalTo(@(36.0));
+        make.height.equalTo(@(kBannerHeight));
     }];
     
 
@@ -298,10 +298,10 @@
     NewsEntityCell *cell = (NewsEntityCell *)self.prototypeCell;
     NewsEntityModel *newsEntityModel = [self.newsListArray objectAtIndex:indexPath.row];
     cell.newsTitleLabel.text = newsEntityModel.newsTitle;
-    CGSize titleSize = [newsEntityModel.newsTitle calculateSize:CGSizeMake(kScreenWidth-22, FLT_MAX) font:kTitleFont];
+    CGSize titleSize = [newsEntityModel.newsTitle calculateSize:CGSizeMake(kScreenWidth-kNewEntityCellPadding*2, FLT_MAX) font:kTitleFont];
     CGSize timeSize = [newsEntityModel.newsTime calculateSize:CGSizeMake(0, FLT_MAX)
                                                          font:kTimeFont];
-    return titleSize.height + timeSize.height + 33;
+    return titleSize.height + timeSize.height + kNewEntityCellPadding*3;
 }
 
 
@@ -384,7 +384,7 @@
     
     [self changeLabelColorAt:Index];
     
-    [self.bannerScrollView setContentOffset:CGPointMake(((85*9-kScreenWidth)/9)*Index, 0) animated:YES];
+    [self.bannerScrollView setContentOffset:CGPointMake(((kBannerLabelWidth*9-kScreenWidth)/9)*Index, 0) animated:YES];
     
     UITableViewController *vc = self.childViewControllers[Index];
     if ([vc.tableView isDescendantOfView:self.scrollView]) {

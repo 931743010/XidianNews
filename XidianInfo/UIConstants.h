@@ -22,5 +22,13 @@
 #define kTitleFont [UIFont systemFontOfSize:17.0]
 #define kTimeFont [UIFont systemFontOfSize:12.0]
 #define kFromFont [UIFont systemFontOfSize:12.0]
+#define kBannerLabelFont [UIFont systemFontOfSize:16]
+
+//size
+#define kBannerHeight 36.0
+#define kBannerLabelWidth 85.0
+#define kBannerLabelHeight 32.0
+#define kNewEntityCellPadding 11.0
+
 
 #endif /* UIConstants_h */

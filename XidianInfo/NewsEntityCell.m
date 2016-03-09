@@ -57,17 +57,17 @@
 - (void)configureSubviewsFrame {
     UIView *superview = self.contentView;
     [self.newsTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(superview.mas_top).with.offset(11);
-        make.left.equalTo(superview.mas_left).with.offset(11);
-        make.right.equalTo(superview.mas_right).with.offset(-11);
+        make.top.equalTo(superview.mas_top).with.offset(kNewEntityCellPadding);
+        make.left.equalTo(superview.mas_left).with.offset(kNewEntityCellPadding);
+        make.right.equalTo(superview.mas_right).with.offset(-kNewEntityCellPadding);
     }];
     [self.newsFromLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.newsTitleLabel.mas_bottom).with.offset(11);
-        make.left.equalTo(superview.mas_left).with.offset(11);
+        make.top.equalTo(self.newsTitleLabel.mas_bottom).with.offset(kNewEntityCellPadding);
+        make.left.equalTo(superview.mas_left).with.offset(kNewEntityCellPadding);
     }];
     [self.newsTimeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.newsTitleLabel.mas_bottom).with.offset(11);
-        make.right.equalTo(superview.mas_right).with.offset(-11);
+        make.top.equalTo(self.newsTitleLabel.mas_bottom).with.offset(kNewEntityCellPadding);
+        make.right.equalTo(superview.mas_right).with.offset(-kNewEntityCellPadding);
     }];
     
 }
